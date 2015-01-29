@@ -53,6 +53,7 @@ Partial Public Class Form1
             Else
                 Using [module] As WinWrap.Basic.Module = basicNoUIObj_.ModuleInstance(ScriptPath(Script), False)
                     If [module] Is Nothing Then
+                        ' script parsing error
                         LogError(basicNoUIObj_.Error)
                     Else
                         Try
