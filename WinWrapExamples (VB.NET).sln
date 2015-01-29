@@ -20,15 +20,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{0864
 		Scripts\DOTNet.bas = Scripts\DOTNet.bas
 		Scripts\Globals.bas = Scripts\Globals.bas
 		Scripts\Good.bas = Scripts\Good.bas
-		Scripts\Good.cls = Scripts\Good.cls
+		Scripts\Good2.bas = Scripts\Good2.bas
 		Scripts\ParseError.bas = Scripts\ParseError.bas
-		Scripts\ParseError.cls = Scripts\ParseError.cls
+		Scripts\ParseError2.bas = Scripts\ParseError2.bas
 		Scripts\RuntimeError.bas = Scripts\RuntimeError.bas
-		Scripts\RuntimeError.cls = Scripts\RuntimeError.cls
+		Scripts\RuntimeError2.bas = Scripts\RuntimeError2.bas
 		Scripts\Stop.bas = Scripts\Stop.bas
-		Scripts\Stop.cls = Scripts\Stop.cls
+		Scripts\Stop2.bas = Scripts\Stop2.bas
 		Scripts\TooLong.bas = Scripts\TooLong.bas
-		Scripts\TooLong.cls = Scripts\TooLong.cls
+		Scripts\TooLong2.bas = Scripts\TooLong2.bas
 	EndProjectSection
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Example1 - NoUI", "Example1 - NoUI\Example1 - NoUI.vbproj", "{830239A0-2BF9-4BAF-BF88-FC7529B44B3D}"

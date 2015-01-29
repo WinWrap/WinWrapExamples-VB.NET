@@ -15,11 +15,11 @@ Partial Public Class Form1
     Private timedout_ As Boolean
     Private timelimit_ As Date
     Private Shared scripts_() As String = New String() {
-        "Good.cls",
-        "ParseError.cls",
-        "RuntimeError.cls",
-        "Stop.cls",
-        "TooLong.cls"}
+        "Good2.bas",
+        "ParseError2.bas",
+        "RuntimeError2.bas",
+        "Stop2.bas",
+        "TooLong2.bas"}
 
     Private WithEvents basicNoUIObj_ As WinWrap.Basic.BasicNoUIObj
 
@@ -43,20 +43,32 @@ Partial Public Class Form1
         Using basicNoUIObj_
             basicNoUIObj_.Secret = New Guid("00000000-0000-0000-0000-000000000000")
             basicNoUIObj_.Initialize()
+            ' Extend WinWrap Basic scripts with Examples.Extensions assembly
+            ' Add "Imports Examples.Extensions" to all WinWrap Basic scripts
+            ' Add "Imports Examples.Extensions.ScriptingLanguage" all WinWrap Basic scripts
             basicNoUIObj_.AddScriptableObjectModel(GetType(ScriptingLanguage))
 
             If Not basicNoUIObj_.LoadModule(ScriptPath("Globals.bas")) Then
                 LogError(basicNoUIObj_.Error)
             Else
-                Try
-                    Using instance As WinWrap.Basic.Instance = basicNoUIObj_.CreateInstance(ScriptPath(Script))
-                        Dim action As IIncidentAction = instance.Cast(Of IIncidentAction)()
-                        TheIncident.Start(action, Text)
-                    End Using
-                Catch exception1 As WinWrap.Basic.TerminatedException
-                Catch ex As Exception
-                    basicNoUIObj_.ReportError(ex)
-                End Try
+                Using [module] As WinWrap.Basic.Module = basicNoUIObj_.ModuleInstance(ScriptPath(Script), False)
+                    If [module] Is Nothing Then
+                        LogError(basicNoUIObj_.Error)
+                    Else
+                        Try
+                            Using instance As WinWrap.Basic.Instance = basicNoUIObj_.CreateInstance(ScriptPath(Script) & "<IncidentAction")
+                                ' Execute script code via an interface
+                                Dim action As IIncidentAction = instance.Cast(Of IIncidentAction)()
+                                TheIncident.Start(action, Text)
+                            End Using
+                        Catch exception1 As WinWrap.Basic.TerminatedException
+                            ' script execution terminated, ignore error
+                        Catch ex As Exception
+                            ' script caused an exception
+                            basicNoUIObj_.ReportError(ex)
+                        End Try
+                    End If
+                End Using
             End If
         End Using
         basicNoUIObj_ = Nothing
