@@ -12,6 +12,7 @@ Imports Examples.Extensions
 
 Partial Public Class Form1
 
+    Private WithEvents basicNoUIObj_ As WinWrap.Basic.BasicNoUIObj
     Private timedout_ As Boolean
     Private timelimit_ As Date
     Private Shared scripts_() As String = New String() {
@@ -20,8 +21,6 @@ Partial Public Class Form1
         "RuntimeError2.bas",
         "Stop2.bas",
         "TooLong2.bas"}
-
-    Private WithEvents basicNoUIObj_ As WinWrap.Basic.BasicNoUIObj
 
     Public Sub New()
 
@@ -39,6 +38,7 @@ Partial Public Class Form1
 
     Private Sub buttonRunScript_Click(sender As Object, e As EventArgs) Handles ButtonRunScript.Click
         theincident_ = New Incident
+
         basicNoUIObj_ = New WinWrap.Basic.BasicNoUIObj
         Using basicNoUIObj_
             basicNoUIObj_.Secret = New Guid("00000000-0000-0000-0000-000000000000")
@@ -72,6 +72,7 @@ Partial Public Class Form1
                 End Using
             End If
         End Using
+
         basicNoUIObj_ = Nothing
         theincident_ = Nothing
     End Sub

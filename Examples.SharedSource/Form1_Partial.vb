@@ -14,7 +14,6 @@ Partial Public Class Form1
     Inherits Form
     Implements IHost
 
-
 #Region "IHost"
 
     Private theincident_ As Incident
