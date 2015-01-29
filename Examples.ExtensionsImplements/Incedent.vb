@@ -9,13 +9,12 @@
 
 Imports System.Text
 
-<Scriptable> _
-Public Class Incident
-    Private Property Datetime As DateTime
+<Scriptable> Public Class Incident
+    Private Property Datetime As Date
 
-    <Scriptable> Property Data As String
-    <Scriptable> Property FilledInBy As String
     <Scriptable> Property FiredBy As String
+    <Scriptable> Property FilledInBy As String
+    <Scriptable> Property Data As String
 
     <Scriptable> Public Sub LogMe()
         Datetime = Date.Now
@@ -28,13 +27,13 @@ Public Class Incident
         action.Started(Me)
     End Sub
 
-    <Scriptable>  Public Overrides Function ToString() As String
+    <Scriptable> Public Overrides Function ToString() As String
         Dim sb As New StringBuilder
-        sb.AppendLine(String.Format("Incident at {0:dddd, MMMM yyyy HH:mm:ss tt zzz}", Me.Datetime))
-        sb.AppendLine(("  FiredBy: " & Me.FiredBy))
-        sb.AppendLine(("  FilledInBy: " & Me.FilledInBy))
-        If (Not Me.Data Is Nothing) Then
-            sb.AppendLine(("  Data: " & Me.Data))
+        sb.AppendLine(String.Format("Incident at {0:dddd, MMMM yyyy HH:mm:ss tt zzz}", Datetime))
+        sb.AppendLine("  FiredBy: " & FiredBy)
+        sb.AppendLine("  FilledInBy: " & FilledInBy)
+        If Not Data Is Nothing Then
+            sb.AppendLine("  Data: " & Data)
         End If
         Return sb.ToString
     End Function

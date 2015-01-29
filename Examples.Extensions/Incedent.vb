@@ -9,33 +9,37 @@
 
 Imports System.Text
 
-<Scriptable> _
-Public Class Incident
-    <Scriptable>  Public Sub LogMe()
+<Scriptable> Public Class Incident
+
+    Private Property Datetime As Date
+
+    <Scriptable> Public Event Started As Action
+
+    <Scriptable> Property Data As String
+    <Scriptable> Property FilledInBy As String
+    <Scriptable> Property FiredBy As String
+
+    <Scriptable> Public Sub LogMe()
         Datetime = Date.Now
         ScriptingLanguage.Host.Log(ToString)
     End Sub
 
-    Public Sub Start(ByVal action As IIncidentAction, ByVal firedby As String)
+    ' no [Scriptable] attribute
+    ' allows host to fire the event, but not the script
+    Public Sub Start(ByVal firedby As String)
         Me.FiredBy = firedby
-        action.Started(Me)
+        RaiseEvent Started()
     End Sub
 
-    <Scriptable>  Public Overrides Function ToString() As String
+    <Scriptable> Public Overrides Function ToString() As String
         Dim sb As New StringBuilder
-        sb.AppendLine(String.Format("Incident at {0:dddd, MMMM yyyy HH:mm:ss tt zzz}", Me.Datetime))
-        sb.AppendLine(("  FiredBy: " & Me.FiredBy))
-        sb.AppendLine(("  FilledInBy: " & Me.FilledInBy))
-        If (Not Me.Data Is Nothing) Then
-            sb.AppendLine(("  Data: " & Me.Data))
+        sb.AppendLine(String.Format("Incident at {0:dddd, MMMM yyyy HH:mm:ss tt zzz}", Datetime))
+        sb.AppendLine("  FiredBy: " & FiredBy)
+        sb.AppendLine("  FilledInBy: " & FilledInBy)
+        If Not Data Is Nothing Then
+            sb.AppendLine("  Data: " & Data)
         End If
         Return sb.ToString
     End Function
-
-    ' Properties
-    <Scriptable> Property Data As String
-    Private Property Datetime As DateTime
-    <Scriptable> Property FilledInBy As String
-    <Scriptable> Property FiredBy As String
 End Class
 

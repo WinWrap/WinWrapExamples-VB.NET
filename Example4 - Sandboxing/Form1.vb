@@ -15,11 +15,9 @@ Partial Public Class Form1
     Private timedout_ As Boolean
     Private timelimit_ As Date
     Private Shared scripts_() As String = New String() {
-        "Good.cls",
-        "ParseError.cls",
-        "RuntimeError.cls",
-        "Stop.cls",
-        "TooLong.cls"}
+        "Good.bas",
+        "BlockedParseError.bas",
+        "BlockedRuntimeError.bas"}
 
     Private WithEvents basicNoUIObj_ As WinWrap.Basic.BasicNoUIObj
 
@@ -45,18 +43,18 @@ Partial Public Class Form1
             basicNoUIObj_.Initialize()
             basicNoUIObj_.AddScriptableObjectModel(GetType(ScriptingLanguage))
 
+            basicNoUIObj_.Sandboxed = True
             If Not basicNoUIObj_.LoadModule(ScriptPath("Globals.bas")) Then
                 LogError(basicNoUIObj_.Error)
             Else
-                Try
-                    Using instance As WinWrap.Basic.Instance = basicNoUIObj_.CreateInstance(ScriptPath(Script))
-                        Dim action As IIncidentAction = instance.Cast(Of IIncidentAction)()
-                        TheIncident.Start(action, Text)
-                    End Using
-                Catch exception1 As WinWrap.Basic.TerminatedException
-                Catch ex As Exception
-                    basicNoUIObj_.ReportError(ex)
-                End Try
+                Using [module] As WinWrap.Basic.Module = basicNoUIObj_.ModuleInstance(ScriptPath(Script), False)
+                    If [module] Is Nothing Then
+                        LogError(basicNoUIObj_.Error)
+                    Else
+                        ' Execute script code via an event
+                        ScriptingLanguage.TheIncident.Start(Me.Text)
+                    End If
+                End Using
             End If
         End Using
         basicNoUIObj_ = Nothing
