@@ -10,7 +10,7 @@
 Imports System.IO
 Imports Examples.Extensions
 
-Public Class Form1
+Public Class MainWindow
 
     Implements IHost
 
@@ -34,13 +34,12 @@ Public Class Form1
 
     Private Shared scripts_() As String = New String() {
         "Good.bas",
-        "DOTNet.bas",
         "ParseError.bas",
         "RuntimeError.bas"}
 
     Private ReadOnly Property Script As String
         Get
-            Return scripts_(ListBoxScripts.SelectedIndex)
+            Return scripts_(ListBox1.SelectedIndex)
         End Get
     End Property
 
@@ -53,15 +52,16 @@ Public Class Form1
         theincident_ = New Incident()
         Dim script As String
         For Each script In scripts_
-            ListBoxScripts.Items.Add(script)
+            ListBox1.Items.Add(script)
         Next
-        ListBoxScripts.SelectedIndex = 0
+        ListBox1.SelectedIndex = 0
     End Sub
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub Window_Loaded(sender As Object, e As RoutedEventArgs)
         ' selecting TabPage2 initializes the BasicIdeCtl
-        TabControl1.SelectedTab = TabPage2
-        TabControl1.SelectedTab = TabPage1
+        TabControl1.SelectedIndex = 1
+        basicIdeCtl1.UpdateLayout()
+        TabControl1.SelectedIndex = 0
 
         BasicIdeCtl1.AddScriptableObjectModel(GetType(ScriptingLanguage))
 
@@ -96,35 +96,33 @@ Public Class Form1
     ' WinWrap Basic execution has encountered an unhandled run-time error
     ' show the IDE so the error message box is not displayed
     Private Sub BasicIdeCtl1_HandleError(sender As Object, e As EventArgs) Handles BasicIdeCtl1.HandleError
-        TabControl1.SelectedTab = TabPage2
+        TabControl1.SelectedIndex = 1
     End Sub
 
     ' WinWrap Basic execution has paused because a break point
     ' has been encountered or a stop instruction has been
     ' executed or an unhandled run-time error has occurred
     Private Sub BasicIdeCtl1_Pause_(sender As Object, e As EventArgs) Handles BasicIdeCtl1.Pause_
-        TabControl1.SelectedTab = TabPage2
+        TabControl1.SelectedIndex = 1
     End Sub
 
-    ' default AttachToForm behavior shows the correct form, now select the IDE's tab
-    Private Sub BasicIdeCtl1_ShowForm(sender As Object, e As EventArgs) Handles BasicIdeCtl1.ShowForm
-        TabControl1.SelectedTab = TabPage2
+    ' default AttachToWindow behavior shows the correct window, now select the IDE's tab
+    Private Sub BasicIdeCtl1_ShowWindow(sender As Object, e As EventArgs) Handles BasicIdeCtl1.ShowWindow
+        TabControl1.SelectedIndex = 1
     End Sub
 
-    Private Sub TabControl1_Deselecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Deselecting
-        If e.TabPageIndex = 1 Then
-            BasicIdeCtl1.Run = False
-        End If
+    Private Sub BasicIdeCtl1_StatusBar(sender As Object, e As WinWrap.Basic.Classic.StatusBarEventArgs) Handles BasicIdeCtl1.StatusBar
+        e.Handled = True
     End Sub
 
-    Private Sub ButtonEdit_Click(sender As Object, e As EventArgs) Handles ButtonEdit.Click
+    Private Sub ButtonEdit_Click(sender As Object, e As RoutedEventArgs) Handles ButtonEdit.Click
         BasicIdeCtl1.DesignMode_ = True ' enter design mode
         BasicIdeCtl1.FileName = ScriptPath(Script)
         BasicIdeCtl1.ActiveSheet = BasicIdeCtl1.FindSheet(ScriptPath(Script))
-        tabControl1.SelectedTab = tabPage2
+        TabControl1.SelectedIndex = 1
     End Sub
 
-    Private Sub ButtonRun_Click(sender As Object, e As EventArgs) Handles ButtonRun.Click
+    Private Sub RunButton_Click(sender As Object, e As RoutedEventArgs) Handles RunButton.Click
         BasicIdeCtl1.DesignMode_ = True ' enter design mode
         BasicIdeCtl1.DesignMode_ = False ' leave design mode
         ' Execute script code via an event
