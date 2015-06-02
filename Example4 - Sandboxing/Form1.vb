@@ -44,18 +44,20 @@ Partial Public Class Form1
             basicNoUIObj_.AddScriptableObjectModel(GetType(ScriptingLanguage))
 
             basicNoUIObj_.Sandboxed = True
-            If Not basicNoUIObj_.LoadModule(ScriptPath("Globals.bas")) Then
-                LogError(basicNoUIObj_.Error)
-            Else
+            Try
+                If Not basicNoUIObj_.LoadModule(ScriptPath("Globals.bas")) Then
+                    Throw basicNoUIObj_.Error.Exception
+                End If
                 Using [module] As WinWrap.Basic.Module = basicNoUIObj_.ModuleInstance(ScriptPath(Script), False)
                     If [module] Is Nothing Then
-                        LogError(basicNoUIObj_.Error)
-                    Else
-                        ' Execute script code via an event
-                        ScriptingLanguage.TheIncident.Start(Me.Text)
+                        Throw basicNoUIObj_.Error.Exception
                     End If
+                    ' Execute script code via an event
+                    ScriptingLanguage.TheIncident.Start(Me.Text)
                 End Using
-            End If
+            Catch ex As Exception
+                basicNoUIObj_.ReportError(ex)
+            End Try
         End Using
         basicNoUIObj_ = Nothing
         theincident_ = Nothing
